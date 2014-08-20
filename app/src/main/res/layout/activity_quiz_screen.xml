@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_game"
+    tools:context="voxar.cin.ufpe.br.whatsthesong.activities.QuizScreenActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/score"
+        android:textSize="28sp"
+        android:textColor="#F24E18"
+        android:id="@+id/score1"
+        android:layout_gravity="right"
+        android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@+id/score2"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@integer/score"
+        android:textSize="28sp"
+        android:textColor="#F24E18"
+        android:id="@+id/score2"
+        android:layout_gravity="right"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#013E38"
+        android:id="@+id/music1"
+        android:layout_marginBottom="220dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#013E38"
+        android:id="@+id/music2"
+        android:layout_alignTop="@+id/music1"
+        android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#013E38"
+        android:id="@+id/music3"
+        android:layout_alignTop="@+id/music2"
+        android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#013E38"
+        android:id="@+id/music4"
+        android:layout_alignTop="@+id/music3"
+        android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="330dp"
+        android:layout_height="60dp"
+        android:id="@+id/option1"
+        android:layout_marginTop="305dp"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:enabled="true"
+        android:onClick="onOptionClicked"
+        android:clickable="true" />
+
+    <Button
+        android:layout_width="330dp"
+        android:layout_height="60dp"
+        android:id="@+id/option2"
+        android:layout_marginTop="367dp"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:onClick="onOptionClicked"
+        android:clickable="true" />
+
+    <Button
+        android:layout_width="330dp"
+        android:layout_height="60dp"
+        android:id="@+id/option3"
+        android:layout_marginTop="428dp"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:onClick="onOptionClicked"
+        android:clickable="true" />
+
+    <Button
+        android:layout_width="330dp"
+        android:layout_height="60dp"
+        android:id="@+id/option4"
+        android:layout_marginTop="490dp"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:onClick="onOptionClicked"
+        android:clickable="true" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+        android:id="@+id/frame"
+        android:layout_marginTop="65dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView1"
+            android:src="@drawable/drum"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="-117dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2"
+            android:src="@drawable/bass"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="-117dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:src="@drawable/keyboard"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="-117dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView4"
+            android:src="@drawable/sax"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="-117dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView5"
+            android:src="@drawable/guitar"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="-117dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView6"
+            android:src="@drawable/voice"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="-117dp" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/horizontalScrollView"
+            android:layout_gravity="center" />
+
+
+    </FrameLayout>
+
+</RelativeLayout>
