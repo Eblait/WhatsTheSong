@@ -1,18 +1,12 @@
 package voxar.cin.ufpe.br.whatsthesong.activities;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.media.Image;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import voxar.cin.ufpe.br.whatsthesong.NetworkThread;
 import voxar.cin.ufpe.br.whatsthesong.R;
@@ -25,6 +19,7 @@ import voxar.cin.ufpe.br.whatsthesong.utils.Typefaces;
 public class QuizScreenActivity extends FragmentActivity {
 
     NetworkThread nt;
+    public static int SCORE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +63,7 @@ public class QuizScreenActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
 
-        if (nt == null || nt.isCancelled()) {
+        if (nt == null) {
             nt = new NetworkThread(this);
             nt.execute(this.getFilesDir());
         } else if (nt.player.isPlaying()){
@@ -90,9 +85,6 @@ public class QuizScreenActivity extends FragmentActivity {
     }
 
     public void onOptionClicked(View v) {
-        nt.cancel(true);
-        Log.d("THREAD STILL LIVES", "" + nt.aSong.getDuration());
-
         int id = v.getId(), answer = 0;
         boolean result = false;
 
@@ -115,16 +107,24 @@ public class QuizScreenActivity extends FragmentActivity {
         }
 
         if (answer == nt.aSong.getAnswer()) {
+            Log.d("INDEX", "" + nt.index);
+            Log.d("DURATION", "" + nt.aSong.getDuration());
+            Log.d("POSITION", "" + nt.player.getCurrentPosition());
+            Log.d("SIZE", "" + nt.aSong.getIndexes().size());
+
+            SCORE += ((1 - (((nt.index + 1) * nt.aSong.getDuration()) + (nt.player.getCurrentPosition()/1000))/
+                    (nt.aSong.getDuration() * (nt.aSong.getIndexes().size()/2))) * 100);
+
+            Log.d("SCORE SO FAR", "" + SCORE);
+
             TextView tv = (TextView) findViewById(R.id.score2);
-            String txtScore = tv.getText().toString();
-            int intScore = Integer.parseInt(txtScore);
-
-            intScore += 1000;
-
-            tv.setText(String.valueOf(intScore));
+            tv.setText(String.valueOf(SCORE));
 
             result = true;
         }
+
+        nt.player.release();
+        nt = null;
 
         Intent intent = new Intent(this, ResultScreenActivity.class);
         intent.putExtra("RESULT", result);

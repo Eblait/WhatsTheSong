@@ -3,13 +3,10 @@ package voxar.cin.ufpe.br.whatsthesong;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
@@ -30,8 +27,6 @@ import java.util.ArrayList;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
-import voxar.cin.ufpe.br.whatsthesong.fragments.LoadingFragment;
 
 /**
  * Created by Dicksson on 8/1/2014.
@@ -54,13 +49,24 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
     protected void onPreExecute() {
         super.onPreExecute();
 
+        //Clear animations and text left by the previous round
         frame = (FrameLayout) mActivity.findViewById(R.id.frame);
-        Log.d("CHILD COUNT", "" + frame.getChildCount());
-
-        for (int i = 1; i <= 6; i++) {
+        for (int i = 0; i <= 5; i++) {
             frame.getChildAt(i).clearAnimation();
         }
-        frame.clearAnimation();
+
+        int id;
+        TextView txtView;
+        try {
+            for (int i = 1; i <= 4; i++) {
+                id = R.id.class.getField("music" + i).getInt(0);
+                txtView = (TextView) mActivity.findViewById(id);
+                txtView.setText("");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -182,9 +188,4 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
         }
     }
 
-    @Override
-    protected void onCancelled() {
-        super.onCancelled();
-        player.reset();
-    }
 }
