@@ -12,6 +12,19 @@ import voxar.cin.ufpe.br.whatsthesong.R;
  * Created by Dicksson on 7/31/2014.
  */
 public class LoadingFragment extends DialogFragment {
+
+    int value;
+    final static String TAG = "TestDialog";
+
+    public LoadingFragment(int value) {
+        this.value = value;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_loading, container, false);
