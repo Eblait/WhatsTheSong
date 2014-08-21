@@ -52,6 +52,10 @@ public class QuizScreenActivity extends FragmentActivity {
                 id = R.id.class.getField("music" + i).getInt(0);
                 tv = (TextView) findViewById(id);
                 tv.setTypeface(tf);
+
+                id = R.id.class.getField("artist" + i).getInt(0);
+                tv = (TextView) findViewById(id);
+                tv.setTypeface(tf);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,9 +116,11 @@ public class QuizScreenActivity extends FragmentActivity {
             double b3 = nt.index;
             double b4 = nt.player.getCurrentPosition() / 1000;
 
-            int roundScore =  (int) ((1 - ((b3 * b1) + b4)/(b1 * b2)) * 100);
+            Log.d("B4", "" + b4);
 
-            SCORE += roundScore;
+            double roundScore = ((1 - ((b3 * b1) + b4)/(b1 * b2)) * 100);
+
+            if (roundScore > 0) SCORE += roundScore;
 
             TextView tv = (TextView) findViewById(R.id.score2);
             tv.setText(String.valueOf(SCORE));

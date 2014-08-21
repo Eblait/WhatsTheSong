@@ -1,5 +1,7 @@
 package voxar.cin.ufpe.br.whatsthesong;
 
+import android.util.Log;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -38,7 +40,9 @@ public class SAXHandler extends DefaultHandler {
             trackList.getIndexes().add(Integer.parseInt(content.substring(pos, pos + 1)));
         } else if (qName.contains("option")) {
             String str[] = content.split(":");
-            trackList.getOptions().add(str[0] + "\n" + str[1]);
+            str[1] = str[1].trim();
+
+            trackList.getOptions().add(str);
         } else if (qName == "answer") {
             trackList.setAnswer(Integer.parseInt(content));
         }

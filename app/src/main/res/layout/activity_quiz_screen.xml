@@ -35,10 +35,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="18sp"
+        android:text="sdadsadadasd"
         android:textColor="#013E38"
         android:id="@+id/music1"
-        android:layout_marginBottom="220dp"
+        android:layout_marginBottom="235dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
@@ -46,30 +47,77 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
+        android:text="sdadsadadasd"
         android:textColor="#013E38"
+        android:id="@+id/artist1"
+        android:layout_marginBottom="210dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="#013E38"
+        android:text="sadasdasda"
         android:id="@+id/music2"
         android:layout_alignTop="@+id/music1"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="62dp"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
+        android:text="sdadsadadasd"
         android:textColor="#013E38"
+        android:id="@+id/artist2"
+        android:layout_alignTop="@+id/artist1"
+        android:layout_marginTop="62dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="#013E38"
+        android:text="asdadsada"
         android:id="@+id/music3"
         android:layout_alignTop="@+id/music2"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="62dp"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
+        android:text="sdadsadadasd"
         android:textColor="#013E38"
+        android:id="@+id/artist3"
+        android:layout_alignTop="@+id/artist2"
+        android:layout_marginTop="62dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="#013E38"
+        android:text="asdasdasd"
         android:id="@+id/music4"
         android:layout_alignTop="@+id/music3"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="62dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="sdadsadadasd"
+        android:textColor="#013E38"
+        android:id="@+id/artist4"
+        android:layout_alignTop="@+id/artist3"
+        android:layout_marginTop="62dp"
         android:layout_centerHorizontal="true" />
 
     <Button

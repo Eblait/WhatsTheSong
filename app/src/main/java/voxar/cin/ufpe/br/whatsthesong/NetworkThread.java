@@ -62,6 +62,10 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
                 id = R.id.class.getField("music" + i).getInt(0);
                 txtView = (TextView) mActivity.findViewById(id);
                 txtView.setText("");
+
+                id = R.id.class.getField("artist" + i).getInt(0);
+                txtView = (TextView) mActivity.findViewById(id);
+                txtView.setText("");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,12 +121,19 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
         final int size = finalSong.getUrls().size();
 
         try {
-            ArrayList<String> options = finalSong.getOptions();
+            ArrayList<String[]> options = finalSong.getOptions();
 
             for (int i = 1; i <= 4; i++) {
+
+                Log.d("SONG", options.get(i - 1)[0]);
                 id = R.id.class.getField("music" + i).getInt(0);
                 txtView = (TextView) mActivity.findViewById(id);
-                txtView.setText(options.get(i - 1));
+                txtView.setText(options.get(i - 1)[0]);
+
+                Log.d("SONG", options.get(i - 1)[1]);
+                id = R.id.class.getField("artist" + i).getInt(0);
+                txtView = (TextView) mActivity.findViewById(id);
+                txtView.setText(options.get(i - 1)[1]);
             }
 
             options.clear();
