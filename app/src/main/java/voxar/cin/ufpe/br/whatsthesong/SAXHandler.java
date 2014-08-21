@@ -37,7 +37,8 @@ public class SAXHandler extends DefaultHandler {
             int pos = content.length() - 5;
             trackList.getIndexes().add(Integer.parseInt(content.substring(pos, pos + 1)));
         } else if (qName.contains("option")) {
-            trackList.getOptions().add(content);
+            String str[] = content.split(":");
+            trackList.getOptions().add(str[0] + "\n" + str[1]);
         } else if (qName == "answer") {
             trackList.setAnswer(Integer.parseInt(content));
         }

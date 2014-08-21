@@ -107,15 +107,14 @@ public class QuizScreenActivity extends FragmentActivity {
         }
 
         if (answer == nt.aSong.getAnswer()) {
-            Log.d("INDEX", "" + nt.index);
-            Log.d("DURATION", "" + nt.aSong.getDuration());
-            Log.d("POSITION", "" + nt.player.getCurrentPosition());
-            Log.d("SIZE", "" + nt.aSong.getIndexes().size());
+            double b1 = nt.aSong.getDuration();
+            double b2 = nt.aSong.getIndexes().size();
+            double b3 = nt.index;
+            double b4 = nt.player.getCurrentPosition() / 1000;
 
-            SCORE += ((1 - (((nt.index + 1) * nt.aSong.getDuration()) + (nt.player.getCurrentPosition()/1000))/
-                    (nt.aSong.getDuration() * (nt.aSong.getIndexes().size()/2))) * 100);
+            int roundScore =  (int) ((1 - ((b3 * b1) + b4)/(b1 * b2)) * 100);
 
-            Log.d("SCORE SO FAR", "" + SCORE);
+            SCORE += roundScore;
 
             TextView tv = (TextView) findViewById(R.id.score2);
             tv.setText(String.valueOf(SCORE));
