@@ -1,19 +1,18 @@
 package voxar.cin.ufpe.br.whatsthesong.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
+
 import voxar.cin.ufpe.br.whatsthesong.NetworkThread;
 import voxar.cin.ufpe.br.whatsthesong.R;
 import voxar.cin.ufpe.br.whatsthesong.utils.OnSwipeTouchListener;
-import voxar.cin.ufpe.br.whatsthesong.utils.PauseHandler;
 import voxar.cin.ufpe.br.whatsthesong.utils.Typefaces;
 
 /**
@@ -21,11 +20,7 @@ import voxar.cin.ufpe.br.whatsthesong.utils.Typefaces;
  */
 public class QuizScreenActivity extends FragmentActivity {
 
-    /**
-     * Used for "what" parameter to handler messages
-     */
-    final static int MSG_WHAT = ('F' << 16) + ('T' << 8) + 'A';
-    final static int MSG_SHOW_DIALOG = 1;
+    private static WeakReference<QuizScreenActivity> mActivity = null;
 
     NetworkThread nt;
     public static int SCORE = 0;
@@ -34,6 +29,8 @@ public class QuizScreenActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_screen);
+
+        mActivity = new WeakReference<QuizScreenActivity>(this);
 
         findViewById(R.id.horizontalScrollView).setOnTouchListener(new OnSwipeTouchListener(this) {
             @Override
@@ -149,51 +146,51 @@ public class QuizScreenActivity extends FragmentActivity {
      * Message Handler class that supports buffering up of messages when the
      * activity is paused i.e. in the background.
      */
-    static class ConcreteTestHandler extends PauseHandler {
-
-        /**
-         * Activity instance
-         */
-        protected Activity activity;
-
-        /**
-         * Set the activity associated with the handler
-         *
-         * @param activity
-         *            the activity to set
-         */
-        final void setActivity(Activity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        final protected boolean storeMessage(Message message) {
-            // All messages are stored by default
-            return true;
-        };
-
-        @Override
-        final protected void processMessage(Message msg) {
-
-            final Activity activity = this.activity;
-            if (activity != null) {
-                switch (msg.what) {
-
-                    case MSG_WHAT:
-                        switch (msg.arg1) {
-                            case MSG_SHOW_DIALOG:
-                                final FragmentManager fm = activity.getFragmentManager();
-                                final TestDialog dialog = new TestDialog(msg.arg2);
-
-                                // We are on the UI thread so display the dialog
-                                // fragment
-                                dialog.show(fm, TestDialog.TAG);
-                                break;
-                        }
-                        break;
-                }
-            }
-        }
-    }
+//    static class ConcreteTestHandler extends PauseHandler {
+//
+//        /**
+//         * Activity instance
+//         */
+//        protected Activity activity;
+//
+//        /**
+//         * Set the activity associated with the handler
+//         *
+//         * @param activity
+//         *            the activity to set
+//         */
+//        final void setActivity(Activity activity) {
+//            this.activity = activity;
+//        }
+//
+//        @Override
+//        final protected boolean storeMessage(Message message) {
+//            // All messages are stored by default
+//            return true;
+//        };
+//
+//        @Override
+//        final protected void processMessage(Message msg) {
+//
+//            final Activity activity = this.activity;
+//            if (activity != null) {
+//                switch (msg.what) {
+//
+//                    case MSG_WHAT:
+//                        switch (msg.arg1) {
+//                            case MSG_SHOW_DIALOG:
+//                                final FragmentManager fm = activity.getFragmentManager();
+//                                final TestDialog dialog = new TestDialog(msg.arg2);
+//
+//                                // We are on the UI thread so display the dialog
+//                                // fragment
+//                                dialog.show(fm, TestDialog.TAG);
+//                                break;
+//                        }
+//                        break;
+//                }
+//            }
+//        }
+//    }
 
 }

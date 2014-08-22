@@ -13,11 +13,11 @@ import voxar.cin.ufpe.br.whatsthesong.R;
  */
 public class LoadingFragment extends DialogFragment {
 
-    int value;
-    final static String TAG = "TestDialog";
+    public final static String TAG = "TestDialog";
 
-    public LoadingFragment(int value) {
-        this.value = value;
+    public static DialogFragment newInstance() {
+        LoadingFragment myFragment = new LoadingFragment();
+        return myFragment;
     }
 
     @Override

@@ -1,9 +1,13 @@
 package voxar.cin.ufpe.br.whatsthesong;
 
+import android.app.Dialog;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -28,6 +32,8 @@ import java.util.ArrayList;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import voxar.cin.ufpe.br.whatsthesong.fragments.LoadingFragment;
+
 /**
  * Created by Dicksson on 8/1/2014.
  */
@@ -48,6 +54,22 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+
+        /*
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            DummyFragment dummyFragment = DummyFragment.newInstance();
+            ft.add(R.id.dummy_fragment_layout, dummyFragment);
+            ft.commit();
+        */
+
+        FragmentManager fm = mActivity.getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        DialogFragment dialogFragment = LoadingFragment.newInstance();
+        dialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+        dialogFragment.setCancelable(false);
+        ft.add(dialogFragment, LoadingFragment.TAG);
+        ft.commitAllowingStateLoss();
 
         //Clear animations and text left by the previous round
         frame = (FrameLayout) mActivity.findViewById(R.id.frame);
@@ -114,6 +136,14 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
     protected void onPostExecute(Song aSong) {
         super.onPostExecute(aSong);
 
+        if ((mActivity != null) && (!mActivity.isFinishing())) {
+            FragmentManager fm = mActivity.getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            LoadingFragment dialog = (LoadingFragment) fm.findFragmentByTag(LoadingFragment.TAG);
+            ft.remove(dialog);
+            ft.commitAllowingStateLoss();
+        }
+
         final Song finalSong = aSong;
 
         TextView txtView;
@@ -125,12 +155,10 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
 
             for (int i = 1; i <= 4; i++) {
 
-                Log.d("SONG", options.get(i - 1)[0]);
                 id = R.id.class.getField("music" + i).getInt(0);
                 txtView = (TextView) mActivity.findViewById(id);
                 txtView.setText(options.get(i - 1)[0]);
 
-                Log.d("SONG", options.get(i - 1)[1]);
                 id = R.id.class.getField("artist" + i).getInt(0);
                 txtView = (TextView) mActivity.findViewById(id);
                 txtView.setText(options.get(i - 1)[1]);
