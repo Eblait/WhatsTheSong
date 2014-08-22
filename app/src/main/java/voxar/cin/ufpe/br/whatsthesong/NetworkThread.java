@@ -15,7 +15,9 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -42,6 +44,7 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
 
     public int index;
     FragmentActivity mActivity;
+    public MediaController controller;
     public MediaPlayer player;
     public Song aSong;
     FrameLayout frame;
@@ -167,6 +170,12 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
             options.clear();
 
             player = MediaPlayer.create(mActivity, Uri.parse(mActivity.getFilesDir() + "/track" + index + ".mp3"));
+            player.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+                @Override
+                public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                    Toast.makeText(mActivity, "at" + mp.getCurrentPosition(), Toast.LENGTH_SHORT).show();
+                }
+            });
             player.start();
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import voxar.cin.ufpe.br.whatsthesong.R;
@@ -30,6 +31,10 @@ public class ResultScreenActivity extends Activity {
 
         tv.setTypeface(tf);
 
+    }
+
+    public void onClickReturn(View v) {
+        finish();
     }
 
 }
