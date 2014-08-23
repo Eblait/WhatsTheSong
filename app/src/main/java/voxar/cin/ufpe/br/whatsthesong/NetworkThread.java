@@ -2,6 +2,7 @@ package voxar.cin.ufpe.br.whatsthesong;
 
 import android.app.Dialog;
 import android.media.MediaPlayer;
+import android.media.TimedText;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
@@ -35,6 +36,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import voxar.cin.ufpe.br.whatsthesong.fragments.LoadingFragment;
+import voxar.cin.ufpe.br.whatsthesong.utils.ProgressBar;
 
 /**
  * Created by Dicksson on 8/1/2014.
@@ -170,12 +172,6 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
             options.clear();
 
             player = MediaPlayer.create(mActivity, Uri.parse(mActivity.getFilesDir() + "/track" + index + ".mp3"));
-            player.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-                @Override
-                public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                    Toast.makeText(mActivity, "at" + mp.getCurrentPosition(), Toast.LENGTH_SHORT).show();
-                }
-            });
             player.start();
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
@@ -230,6 +226,8 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
 
             animationSet.setFillAfter(true);
             instrument.startAnimation(animationSet);
+
+            new Thread (new ProgressBar(mActivity, player, "drum")).start();
 
         } catch (Exception e) {
             e.printStackTrace();
