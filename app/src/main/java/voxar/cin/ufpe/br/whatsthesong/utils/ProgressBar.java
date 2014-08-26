@@ -1,6 +1,7 @@
 package voxar.cin.ufpe.br.whatsthesong.utils;
 
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
@@ -15,8 +16,10 @@ public class ProgressBar implements Runnable {
 
     MediaPlayer mp;
     ImageView progress;
+    FragmentActivity mActivity;
 
-    public ProgressBar (FragmentActivity mActivity, MediaPlayer mp, String instrument) throws Exception {
+    public ProgressBar(FragmentActivity mActivity, MediaPlayer mp, String instrument) throws Exception {
+        this.mActivity = mActivity;
         this.mp = mp;
         progress = (ImageView) mActivity.findViewById(R.id.class.getField("loading_bar_" + instrument).getInt(0));
     }
@@ -26,18 +29,18 @@ public class ProgressBar implements Runnable {
         // mp is your MediaPlayer
         // progress is your ProgressBar
 
-        int currentPosition = 0;
+        final int[] currentPosition = {0};
         int total = mp.getDuration();
-        while (mp != null && currentPosition < total) {
-            try {
-                Thread.sleep(1000);
-                currentPosition = mp.getCurrentPosition();
-            } catch (InterruptedException e) {
-                return;
-            } catch (Exception e) {
-                return;
-            }
-            progress.setScaleX(currentPosition * 5);
+
+        final Handler handler = new Handler();
+        while (mp != null && currentPosition[0] < total) {
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    currentPosition[0] = mp.getCurrentPosition();
+                    progress.setScaleX(currentPosition[0] * 5);
+                }
+            });
         }
     }
 }

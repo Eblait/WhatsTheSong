@@ -227,7 +227,8 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
             animationSet.setFillAfter(true);
             instrument.startAnimation(animationSet);
 
-            new Thread (new ProgressBar(mActivity, player, "drum")).start();
+            //mActivity.runOnUiThread (new ProgressBar(mActivity, player, "drum"));
+            //new Thread(new ProgressBar(mActivity, player, "drum")).start();
 
         } catch (Exception e) {
             e.printStackTrace();

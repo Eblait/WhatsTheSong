@@ -228,6 +228,6 @@
             android:scaleType="fitXY"
             android:id="@+id/loading_bar_drum"
             android:src="@drawable/loading_bar_drum" />
-        </FrameLayout>
+    </FrameLayout>
 
 </RelativeLayout>
