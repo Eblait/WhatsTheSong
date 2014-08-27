@@ -217,6 +217,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/loadingBarFrame"
         android:layout_width="360dp"
         android:layout_height="30dp"
         android:layout_marginTop="247.5dp"
@@ -228,6 +229,42 @@
             android:scaleType="fitXY"
             android:id="@+id/loading_bar_drum"
             android:src="@drawable/loading_bar_drum" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:id="@+id/loading_bar_bass"
+            android:src="@drawable/loading_bar_bass" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:id="@+id/loading_bar_keyboard"
+            android:src="@drawable/loading_bar_keyboard" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:id="@+id/loading_bar_sax"
+            android:src="@drawable/loading_bar_sax" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:id="@+id/loading_bar_guitar"
+            android:src="@drawable/loading_bar_guitar" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:id="@+id/loading_bar_voice"
+            android:src="@drawable/loading_bar_voice" />
+
     </FrameLayout>
 
 </RelativeLayout>

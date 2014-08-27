@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -20,8 +22,6 @@ import voxar.cin.ufpe.br.whatsthesong.utils.Typefaces;
  */
 public class QuizScreenActivity extends FragmentActivity {
 
-    private static WeakReference<QuizScreenActivity> mActivity = null;
-
     NetworkThread nt;
     public static int SCORE = 0;
 
@@ -29,8 +29,6 @@ public class QuizScreenActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_screen);
-
-        mActivity = new WeakReference<QuizScreenActivity>(this);
 
         findViewById(R.id.horizontalScrollView).setOnTouchListener(new OnSwipeTouchListener(this) {
             @Override
@@ -76,7 +74,7 @@ public class QuizScreenActivity extends FragmentActivity {
         if (nt == null) {
             nt = new NetworkThread(this);
             nt.execute(this.getFilesDir());
-        } else if (nt.player.isPlaying()){
+        } else if (nt.player.isPlaying()) {
             nt.player.start();
         }
 
@@ -94,7 +92,7 @@ public class QuizScreenActivity extends FragmentActivity {
         Log.d("EXIT", "from onStop");
     }
 
-    public void onOptionClicked(View v) {
+    public synchronized void onOptionClicked(View v) {
         int id = v.getId(), answer = 0;
         boolean result = false;
 
@@ -124,7 +122,7 @@ public class QuizScreenActivity extends FragmentActivity {
 
             Log.d("B4", "" + b4);
 
-            double roundScore = ((1 - ((b3 * b1) + b4)/(b1 * b2)) * 100);
+            double roundScore = ((1 - ((b3 * b1) + b4) / (b1 * b2)) * 100);
 
             if (roundScore > 0) SCORE += roundScore;
 
@@ -134,7 +132,9 @@ public class QuizScreenActivity extends FragmentActivity {
             result = true;
         }
 
-        nt.player.release();
+        nt.cancel(false);
+        Log.d("CANCELLED", "" + nt.isCancelled());
+
         nt = null;
 
         Intent intent = new Intent(this, ResultScreenActivity.class);
@@ -142,55 +142,8 @@ public class QuizScreenActivity extends FragmentActivity {
         startActivity(intent);
     }
 
-    /**
-     * Message Handler class that supports buffering up of messages when the
-     * activity is paused i.e. in the background.
-     */
-//    static class ConcreteTestHandler extends PauseHandler {
-//
-//        /**
-//         * Activity instance
-//         */
-//        protected Activity activity;
-//
-//        /**
-//         * Set the activity associated with the handler
-//         *
-//         * @param activity
-//         *            the activity to set
-//         */
-//        final void setActivity(Activity activity) {
-//            this.activity = activity;
-//        }
-//
-//        @Override
-//        final protected boolean storeMessage(Message message) {
-//            // All messages are stored by default
-//            return true;
-//        };
-//
-//        @Override
-//        final protected void processMessage(Message msg) {
-//
-//            final Activity activity = this.activity;
-//            if (activity != null) {
-//                switch (msg.what) {
-//
-//                    case MSG_WHAT:
-//                        switch (msg.arg1) {
-//                            case MSG_SHOW_DIALOG:
-//                                final FragmentManager fm = activity.getFragmentManager();
-//                                final TestDialog dialog = new TestDialog(msg.arg2);
-//
-//                                // We are on the UI thread so display the dialog
-//                                // fragment
-//                                dialog.show(fm, TestDialog.TAG);
-//                                break;
-//                        }
-//                        break;
-//                }
-//            }
-//        }
-//    }
+    public void updateLoadingBar(ImageView loadingBar, int size) {
+        loadingBar.setLayoutParams(new FrameLayout.LayoutParams(size, loadingBar.getHeight()));
+    }
 
 }

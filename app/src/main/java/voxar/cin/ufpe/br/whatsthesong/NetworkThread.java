@@ -1,12 +1,9 @@
 package voxar.cin.ufpe.br.whatsthesong;
 
-import android.app.Dialog;
 import android.media.MediaPlayer;
-import android.media.TimedText;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -16,9 +13,7 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -35,6 +30,7 @@ import java.util.ArrayList;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import voxar.cin.ufpe.br.whatsthesong.activities.QuizScreenActivity;
 import voxar.cin.ufpe.br.whatsthesong.fragments.LoadingFragment;
 import voxar.cin.ufpe.br.whatsthesong.utils.ProgressBar;
 
@@ -44,14 +40,15 @@ import voxar.cin.ufpe.br.whatsthesong.utils.ProgressBar;
 
 public class NetworkThread extends AsyncTask<File, Integer, Song> {
 
+    QuizScreenActivity mActivity;
     public int index;
-    FragmentActivity mActivity;
-    public MediaController controller;
     public MediaPlayer player;
     public Song aSong;
     FrameLayout frame;
+    Thread loadingBar;
+    ProgressBar runnable;
 
-    public NetworkThread(FragmentActivity activity) {
+    public NetworkThread(QuizScreenActivity activity) {
         mActivity = activity;
         index = 0;
     }
@@ -59,14 +56,6 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-
-        /*
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            DummyFragment dummyFragment = DummyFragment.newInstance();
-            ft.add(R.id.dummy_fragment_layout, dummyFragment);
-            ft.commit();
-        */
 
         FragmentManager fm = mActivity.getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -78,6 +67,11 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
 
         //Clear animations and text left by the previous round
         frame = (FrameLayout) mActivity.findViewById(R.id.frame);
+        for (int i = 0; i <= 5; i++) {
+            frame.getChildAt(i).clearAnimation();
+        }
+
+        frame = (FrameLayout) mActivity.findViewById(R.id.loadingBarFrame);
         for (int i = 0; i <= 5; i++) {
             frame.getChildAt(i).clearAnimation();
         }
@@ -176,6 +170,7 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
+                    runnable.running = false;
                     mActivity.deleteFile("track" + index + ".mp3");
                     index++;
                     int id;
@@ -204,6 +199,11 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
                             player.prepare();
                             player.start();
                             player.setOnCompletionListener(this);
+
+                            runnable = new ProgressBar(mActivity, player, finalSong.getIndexes().get(index));
+
+                            loadingBar = new Thread(runnable);
+                            loadingBar.start();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -227,12 +227,18 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
             animationSet.setFillAfter(true);
             instrument.startAnimation(animationSet);
 
-            //mActivity.runOnUiThread (new ProgressBar(mActivity, player, "drum"));
-            //new Thread(new ProgressBar(mActivity, player, "drum")).start();
+            runnable = new ProgressBar(mActivity, player, finalSong.getIndexes().get(index));
+            loadingBar = new Thread(runnable);
+            loadingBar.start();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        runnable.running = false;
+    }
 }

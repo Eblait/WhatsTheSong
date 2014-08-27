@@ -1,12 +1,10 @@
 package voxar.cin.ufpe.br.whatsthesong.utils;
 
 import android.media.MediaPlayer;
-import android.os.Handler;
-import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
 
 import voxar.cin.ufpe.br.whatsthesong.R;
+import voxar.cin.ufpe.br.whatsthesong.activities.QuizScreenActivity;
 
 /**
  * Created by Dicksson on 8/22/2014.
@@ -16,31 +14,57 @@ public class ProgressBar implements Runnable {
 
     MediaPlayer mp;
     ImageView progress;
-    FragmentActivity mActivity;
+    QuizScreenActivity mActivity;
+    public boolean running = true;
 
-    public ProgressBar(FragmentActivity mActivity, MediaPlayer mp, String instrument) throws Exception {
+    public ProgressBar(QuizScreenActivity mActivity, MediaPlayer mp, int index) throws Exception {
         this.mActivity = mActivity;
         this.mp = mp;
+        String instrument = null;
+
+        switch (index) {
+            case 1:
+                instrument = "drum";
+                break;
+            case 2:
+                instrument = "bass";
+                break;
+            case 3:
+                instrument = "keyboard";
+                break;
+            case 4:
+                instrument = "sax";
+                break;
+            case 5:
+                instrument = "guitar";
+                break;
+            case 6:
+                instrument = "voice";
+                break;
+        }
+
         progress = (ImageView) mActivity.findViewById(R.id.class.getField("loading_bar_" + instrument).getInt(0));
     }
 
     @Override
     public void run() {
-        // mp is your MediaPlayer
-        // progress is your ProgressBar
+        int currentPosition;
 
-        final int[] currentPosition = {0};
-        int total = mp.getDuration();
+        while (running && mp != null) {
+            try {
+                currentPosition = mp.getCurrentPosition()/1000;
+                final int finalCurrentPosition = currentPosition;
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mActivity.updateLoadingBar(progress, finalCurrentPosition);
+                    }
+                });
 
-        final Handler handler = new Handler();
-        while (mp != null && currentPosition[0] < total) {
-            mActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    currentPosition[0] = mp.getCurrentPosition();
-                    progress.setScaleX(currentPosition[0] * 5);
-                }
-            });
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
