@@ -142,8 +142,13 @@ public class QuizScreenActivity extends FragmentActivity {
         startActivity(intent);
     }
 
-    public void updateLoadingBar(ImageView loadingBar, int size) {
-        loadingBar.setLayoutParams(new FrameLayout.LayoutParams(size, loadingBar.getHeight()));
+    public void updateLoadingBar(String instrument, int width, int height) {
+        try {
+            ImageView bar = (ImageView) findViewById(R.id.class.getField("loading_bar_" + instrument).getInt(0));
+            bar.setLayoutParams(new FrameLayout.LayoutParams(width, height));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

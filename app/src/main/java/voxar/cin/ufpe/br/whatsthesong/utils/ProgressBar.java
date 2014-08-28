@@ -1,6 +1,8 @@
 package voxar.cin.ufpe.br.whatsthesong.utils;
 
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.widget.ImageView;
 
 import voxar.cin.ufpe.br.whatsthesong.R;
@@ -10,17 +12,17 @@ import voxar.cin.ufpe.br.whatsthesong.activities.QuizScreenActivity;
  * Created by Dicksson on 8/22/2014.
  */
 
-public class ProgressBar implements Runnable {
+public class ProgressBar extends Thread {
 
     MediaPlayer mp;
-    ImageView progress;
+    String instrument;
     QuizScreenActivity mActivity;
     public boolean running = true;
+    int pos, size;
 
-    public ProgressBar(QuizScreenActivity mActivity, MediaPlayer mp, int index) throws Exception {
+    public ProgressBar(QuizScreenActivity mActivity, MediaPlayer mp, int index, int size) throws Exception {
         this.mActivity = mActivity;
         this.mp = mp;
-        String instrument = null;
 
         switch (index) {
             case 1:
@@ -43,7 +45,8 @@ public class ProgressBar implements Runnable {
                 break;
         }
 
-        progress = (ImageView) mActivity.findViewById(R.id.class.getField("loading_bar_" + instrument).getInt(0));
+        this.size = size;
+        pos = ((mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().width)/size * mp.getDuration()/1000) * (index - 1);
     }
 
     @Override
@@ -52,12 +55,12 @@ public class ProgressBar implements Runnable {
 
         while (running && mp != null) {
             try {
-                currentPosition = mp.getCurrentPosition()/1000;
+                currentPosition = pos + (mp.getCurrentPosition()/1000);
                 final int finalCurrentPosition = currentPosition;
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mActivity.updateLoadingBar(progress, finalCurrentPosition);
+                        mActivity.updateLoadingBar(instrument, finalCurrentPosition, mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().height);
                     }
                 });
 
@@ -66,5 +69,6 @@ public class ProgressBar implements Runnable {
                 e.printStackTrace();
             }
         }
+
     }
 }
