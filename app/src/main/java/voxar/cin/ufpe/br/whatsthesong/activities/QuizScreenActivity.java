@@ -2,6 +2,8 @@ package voxar.cin.ufpe.br.whatsthesong.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -9,8 +11,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.lang.ref.WeakReference;
 
 import voxar.cin.ufpe.br.whatsthesong.NetworkThread;
 import voxar.cin.ufpe.br.whatsthesong.R;
@@ -23,6 +23,7 @@ import voxar.cin.ufpe.br.whatsthesong.utils.Typefaces;
 public class QuizScreenActivity extends FragmentActivity {
 
     NetworkThread nt;
+    MediaPlayer player;
     public static int SCORE = 0;
 
     @Override
@@ -71,12 +72,12 @@ public class QuizScreenActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
 
-        if (nt == null) {
-            nt = new NetworkThread(this);
-            nt.execute(this.getFilesDir());
-        } else if (nt.player.isPlaying()) {
-            nt.player.start();
+        if (nt != null && nt.isCancelled()) {
+            clear();
         }
+
+        nt = new NetworkThread(this);
+        nt.execute(this.getFilesDir());
 
     }
 
@@ -92,9 +93,14 @@ public class QuizScreenActivity extends FragmentActivity {
         Log.d("EXIT", "from onStop");
     }
 
-    public synchronized void onOptionClicked(View v) {
+    public void onOptionClicked(View v) {
+        nt.thread.running = false;
+
         int id = v.getId(), answer = 0;
         boolean result = false;
+
+        player = MediaPlayer.create(this, Uri.parse(getFilesDir() + "/track" + (getFilesDir().list().length - 1) + ".mp3"));
+        player.start();
 
         switch (id) {
             case R.id.option1:
@@ -120,8 +126,6 @@ public class QuizScreenActivity extends FragmentActivity {
             double b3 = nt.index;
             double b4 = nt.player.getCurrentPosition() / 1000;
 
-            Log.d("B4", "" + b4);
-
             double roundScore = ((1 - ((b3 * b1) + b4) / (b1 * b2)) * 100);
 
             if (roundScore > 0) SCORE += roundScore;
@@ -132,20 +136,52 @@ public class QuizScreenActivity extends FragmentActivity {
             result = true;
         }
 
-        nt.cancel(false);
-        Log.d("CANCELLED", "" + nt.isCancelled());
-
-        nt = null;
+        nt.player.release();
+        nt.cancel(true);
 
         Intent intent = new Intent(this, ResultScreenActivity.class);
         intent.putExtra("RESULT", result);
         startActivity(intent);
+
     }
 
     public void updateLoadingBar(String instrument, int width, int height) {
+        if (!instrument.isEmpty()) {
+            try {
+                ImageView bar = (ImageView) findViewById(R.id.class.getField("loading_bar_" + instrument).getInt(0));
+                bar.setLayoutParams(new FrameLayout.LayoutParams(width, height));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void clear() {
+        FrameLayout frame;
+        String instruments[] = {"drum", "bass", "keyboard", "sax", "guitar", "voice"};
+        //Reset everything to the starting state
+        frame = (FrameLayout) findViewById(R.id.frame);
+        for (int i = 0; i <= 5; i++) {
+            frame.getChildAt(i).clearAnimation();
+        }
+
+        frame = (FrameLayout) findViewById(R.id.loadingBarFrame);
+        for (int i = 0; i <= 5; i++) {
+            updateLoadingBar(instruments[i], 0, frame.getLayoutParams().height);
+        }
+
+        int id;
+        TextView txtView;
         try {
-            ImageView bar = (ImageView) findViewById(R.id.class.getField("loading_bar_" + instrument).getInt(0));
-            bar.setLayoutParams(new FrameLayout.LayoutParams(width, height));
+            for (int i = 1; i <= 4; i++) {
+                id = R.id.class.getField("music" + i).getInt(0);
+                txtView = (TextView) findViewById(id);
+                txtView.setText("");
+
+                id = R.id.class.getField("artist" + i).getInt(0);
+                txtView = (TextView) findViewById(id);
+                txtView.setText("");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

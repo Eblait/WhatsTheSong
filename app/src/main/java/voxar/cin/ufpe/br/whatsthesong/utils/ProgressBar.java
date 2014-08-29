@@ -15,52 +15,38 @@ import voxar.cin.ufpe.br.whatsthesong.activities.QuizScreenActivity;
 public class ProgressBar extends Thread {
 
     MediaPlayer mp;
-    String instrument;
+    String instrument[] = {"", "drum", "bass", "keyboard", "sax", "guitar", "voice"};
     QuizScreenActivity mActivity;
     public boolean running = true;
-    int pos, size;
+    static int pos;
+    int size, index, instrumentIndex;
 
-    public ProgressBar(QuizScreenActivity mActivity, MediaPlayer mp, int index, int size) throws Exception {
+    public ProgressBar(QuizScreenActivity mActivity, MediaPlayer mp, int index, int instrumentIndex, int size) throws Exception {
         this.mActivity = mActivity;
         this.mp = mp;
-
-        switch (index) {
-            case 1:
-                instrument = "drum";
-                break;
-            case 2:
-                instrument = "bass";
-                break;
-            case 3:
-                instrument = "keyboard";
-                break;
-            case 4:
-                instrument = "sax";
-                break;
-            case 5:
-                instrument = "guitar";
-                break;
-            case 6:
-                instrument = "voice";
-                break;
-        }
-
+        this.instrumentIndex = instrumentIndex;
         this.size = size;
-        pos = ((mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().width)/size * mp.getDuration()/1000) * (index - 1);
+        this.index = index;
     }
 
     @Override
     public void run() {
-        int currentPosition;
+        pos = ((mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().width)/size) * index;
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mActivity.updateLoadingBar(instrument[instrumentIndex - 1], pos, mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().height);
+            }
+        });
 
         while (running && mp != null) {
             try {
-                currentPosition = pos + (mp.getCurrentPosition()/1000);
-                final int finalCurrentPosition = currentPosition;
+                pos += (1000 * mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().width)/(size * mp.getDuration());
+                final int finalCurrentPosition = pos;
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mActivity.updateLoadingBar(instrument, finalCurrentPosition, mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().height);
+                        mActivity.updateLoadingBar(instrument[instrumentIndex], finalCurrentPosition, mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().height);
                     }
                 });
 
@@ -70,5 +56,16 @@ public class ProgressBar extends Thread {
             }
         }
 
+        if (instrumentIndex == 6) {
+            pos = ((mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().width) / size) * (index + 1);
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mActivity.updateLoadingBar(instrument[instrumentIndex], pos, mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().height);
+                }
+            });
+        }
+
+        Log.d("FUCK", "YEAH");
     }
 }

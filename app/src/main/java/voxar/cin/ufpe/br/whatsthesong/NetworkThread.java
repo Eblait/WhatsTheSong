@@ -44,9 +44,7 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
     public int index;
     public MediaPlayer player;
     public Song aSong;
-    FrameLayout frame;
-    ProgressBar thread;
-    String instruments[] = {"drum", "bass", "keyboard", "sax", "guitar", "voice"};
+    public ProgressBar thread;
 
     public NetworkThread(QuizScreenActivity activity) {
         mActivity = activity;
@@ -64,33 +62,6 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
         dialogFragment.setCancelable(false);
         ft.add(dialogFragment, LoadingFragment.TAG);
         ft.commitAllowingStateLoss();
-
-        //Reset everything to the starting state
-        frame = (FrameLayout) mActivity.findViewById(R.id.frame);
-        for (int i = 0; i <= 5; i++) {
-            frame.getChildAt(i).clearAnimation();
-        }
-
-        frame = (FrameLayout) mActivity.findViewById(R.id.loadingBarFrame);
-        for (int i = 0; i <= 5; i++) {
-            mActivity.updateLoadingBar(instruments[i], 0, frame.getLayoutParams().height);
-        }
-
-        int id;
-        TextView txtView;
-        try {
-            for (int i = 1; i <= 4; i++) {
-                id = R.id.class.getField("music" + i).getInt(0);
-                txtView = (TextView) mActivity.findViewById(id);
-                txtView.setText("");
-
-                id = R.id.class.getField("artist" + i).getInt(0);
-                txtView = (TextView) mActivity.findViewById(id);
-                txtView.setText("");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -171,7 +142,6 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     thread.running = false;
-                    mActivity.deleteFile("track" + index + ".mp3");
                     index++;
                     int id;
 
@@ -200,7 +170,7 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
                             player.start();
                             player.setOnCompletionListener(this);
 
-                            thread = new ProgressBar(mActivity, player, finalSong.getIndexes().get(index));
+                            thread = new ProgressBar(mActivity, player, index, finalSong.getIndexes().get(index), size);
                             thread.start();
                         }
                     } catch (Exception e) {
@@ -225,7 +195,7 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
             animationSet.setFillAfter(true);
             instrument.startAnimation(animationSet);
 
-            thread = new ProgressBar(mActivity, player, finalSong.getIndexes().get(index));
+            thread = new ProgressBar(mActivity, player, index, finalSong.getIndexes().get(index), size);
             thread.start();
 
         } catch (Exception e) {
@@ -233,9 +203,4 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
         }
     }
 
-    @Override
-    protected void onCancelled() {
-        super.onCancelled();
-        thread.running = false;
-    }
 }

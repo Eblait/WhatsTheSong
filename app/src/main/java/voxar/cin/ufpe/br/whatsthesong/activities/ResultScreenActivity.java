@@ -3,7 +3,11 @@ package voxar.cin.ufpe.br.whatsthesong.activities;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,6 +15,8 @@ import voxar.cin.ufpe.br.whatsthesong.R;
 import voxar.cin.ufpe.br.whatsthesong.utils.Typefaces;
 
 public class ResultScreenActivity extends Activity {
+
+    MediaPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +26,15 @@ public class ResultScreenActivity extends Activity {
         Typeface tf = Typefaces.get(getApplicationContext(), "RobotoCondensed-Bold.ttf");
         TextView tv = (TextView) findViewById((R.id.text_result));
         boolean result = this.getIntent().getBooleanExtra("RESULT", false);
+
+        for (int i = 0; i < getFilesDir().list().length; i++) {
+            Log.d("FILES", getFilesDir().list()[i]);
+        }
+
+        Log.d("NOW", getFilesDir().list()[getFilesDir().list().length - 1]);
+
+        //player = MediaPlayer.create(this, Uri.parse(getFilesDir() + "/track" + (getFilesDir().list().length - 1) + ".mp3"));
+        //player.start();
 
         if (result) {
             tv.setText("CONGRATS!");
@@ -34,6 +49,7 @@ public class ResultScreenActivity extends Activity {
     }
 
     public void onClickReturn(View v) {
+        //player.release();
         finish();
     }
 
