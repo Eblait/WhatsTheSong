@@ -66,6 +66,5 @@ public class ProgressBar extends Thread {
             });
         }
 
-        Log.d("FUCK", "YEAH");
     }
 }

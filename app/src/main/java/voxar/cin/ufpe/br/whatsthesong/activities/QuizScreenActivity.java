@@ -1,5 +1,7 @@
 package voxar.cin.ufpe.br.whatsthesong.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
@@ -8,9 +10,15 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
 
 import voxar.cin.ufpe.br.whatsthesong.NetworkThread;
 import voxar.cin.ufpe.br.whatsthesong.R;
@@ -20,10 +28,10 @@ import voxar.cin.ufpe.br.whatsthesong.utils.Typefaces;
 /**
  * Created by Dicksson on 8/1/2014.
  */
+
 public class QuizScreenActivity extends FragmentActivity {
 
     NetworkThread nt;
-    MediaPlayer player;
     public static int SCORE = 0;
 
     @Override
@@ -72,13 +80,16 @@ public class QuizScreenActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
 
-        if (nt != null && nt.isCancelled()) {
+        if (nt == null) {
+            nt = new NetworkThread(this);
+            nt.execute(this.getFilesDir());
+        } else if (nt.isCancelled()) {
             clear();
+            nt = new NetworkThread(this);
+            nt.execute(this.getFilesDir());
+        } else if(nt.player.getCurrentPosition() < nt.player.getDuration()) {
+            nt.player.start();
         }
-
-        nt = new NetworkThread(this);
-        nt.execute(this.getFilesDir());
-
     }
 
     @Override
@@ -90,7 +101,32 @@ public class QuizScreenActivity extends FragmentActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("EXIT", "from onStop");
+
+        if (nt.player.isPlaying()) {
+            nt.player.pause();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // 1. Instantiate an AlertDialog.Builder with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(QuizScreenActivity.this);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(R.string.dialog_message)
+        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                clear();
+                finish();
+            }
+        }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        // 3. Show the dialog
+        builder.create().show();
     }
 
     public void onOptionClicked(View v) {
@@ -98,9 +134,6 @@ public class QuizScreenActivity extends FragmentActivity {
 
         int id = v.getId(), answer = 0;
         boolean result = false;
-
-        player = MediaPlayer.create(this, Uri.parse(getFilesDir() + "/track" + (getFilesDir().list().length - 1) + ".mp3"));
-        player.start();
 
         switch (id) {
             case R.id.option1:
@@ -145,6 +178,30 @@ public class QuizScreenActivity extends FragmentActivity {
 
     }
 
+    public void animateInstrument(int instrumentIndex, int size, int index) {
+        ImageView instrument;
+        try {
+            instrument = (ImageView) findViewById(R.id.class.getField("imageView" + instrumentIndex).getInt(0));
+            AnimationSet animationSet = new AnimationSet(true);
+
+            RotateAnimation r = new RotateAnimation(0.0f, -360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            r.setDuration(1000);
+            animationSet.addAnimation(r);
+
+            TranslateAnimation a = new TranslateAnimation(
+                    Animation.ABSOLUTE,0, Animation.ABSOLUTE, (- (620 - (40 * (6 - size))) + index * 40),
+                    Animation.ABSOLUTE,0, Animation.ABSOLUTE,0);
+            a.setDuration(1000);
+            animationSet.addAnimation(a);
+
+            animationSet.setFillAfter(true);
+            instrument.startAnimation(animationSet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void updateLoadingBar(String instrument, int width, int height) {
         if (!instrument.isEmpty()) {
             try {
@@ -157,8 +214,19 @@ public class QuizScreenActivity extends FragmentActivity {
     }
 
     public void clear() {
+
+        //Delete tracks of previous round
+        File dir = getFilesDir();
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                Log.d("DELETED", "" + new File(dir, children[i]).delete());
+            }
+        }
+
         FrameLayout frame;
         String instruments[] = {"drum", "bass", "keyboard", "sax", "guitar", "voice"};
+
         //Reset everything to the starting state
         frame = (FrameLayout) findViewById(R.id.frame);
         for (int i = 0; i <= 5; i++) {

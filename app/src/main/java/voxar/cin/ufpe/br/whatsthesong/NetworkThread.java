@@ -143,26 +143,10 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
                 public void onCompletion(MediaPlayer mp) {
                     thread.running = false;
                     index++;
-                    int id;
 
                     try {
                         if (index < size) {
-                            id = R.id.class.getField("imageView" + finalSong.getIndexes().get(index)).getInt(0);
-                            ImageView instrument = (ImageView) mActivity.findViewById(id);
-                            AnimationSet animationSet = new AnimationSet(true);
-
-                            RotateAnimation r = new RotateAnimation(0.0f, -360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                            r.setDuration(1000);
-                            animationSet.addAnimation(r);
-
-                            TranslateAnimation a = new TranslateAnimation(
-                                    Animation.ABSOLUTE,0, Animation.ABSOLUTE, (- (620 - (40 * (6 - size))) + index * 40),
-                                    Animation.ABSOLUTE,0, Animation.ABSOLUTE,0);
-                            a.setDuration(1000);
-                            animationSet.addAnimation(a);
-
-                            animationSet.setFillAfter(true);
-                            instrument.startAnimation(animationSet);
+                            mActivity.animateInstrument(finalSong.getIndexes().get(index), size, index);
 
                             player.reset();
                             player.setDataSource(mActivity, Uri.parse(mActivity.getFilesDir() + "/track" + index + ".mp3"));
@@ -179,22 +163,7 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
                 }
             });
 
-            ImageView instrument = (ImageView) mActivity.findViewById(R.id.class.getField("imageView" + finalSong.getIndexes().get(index)).getInt(0));
-            AnimationSet animationSet = new AnimationSet(true);
-
-            RotateAnimation r = new RotateAnimation(0.0f, -360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            r.setDuration(1000);
-            animationSet.addAnimation(r);
-
-            TranslateAnimation a = new TranslateAnimation(
-                    Animation.ABSOLUTE,0, Animation.ABSOLUTE, (- (620 - (40 * (6 - size))) + index * 40),
-                    Animation.ABSOLUTE,0, Animation.ABSOLUTE,0);
-            a.setDuration(1000);
-            animationSet.addAnimation(a);
-
-            animationSet.setFillAfter(true);
-            instrument.startAnimation(animationSet);
-
+            mActivity.animateInstrument(finalSong.getIndexes().get(index), size, index);
             thread = new ProgressBar(mActivity, player, index, finalSong.getIndexes().get(index), size);
             thread.start();
 

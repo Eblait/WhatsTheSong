@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.File;
+
 import voxar.cin.ufpe.br.whatsthesong.R;
 import voxar.cin.ufpe.br.whatsthesong.utils.Typefaces;
 
@@ -27,14 +29,8 @@ public class ResultScreenActivity extends Activity {
         TextView tv = (TextView) findViewById((R.id.text_result));
         boolean result = this.getIntent().getBooleanExtra("RESULT", false);
 
-        for (int i = 0; i < getFilesDir().list().length; i++) {
-            Log.d("FILES", getFilesDir().list()[i]);
-        }
-
-        Log.d("NOW", getFilesDir().list()[getFilesDir().list().length - 1]);
-
-        //player = MediaPlayer.create(this, Uri.parse(getFilesDir() + "/track" + (getFilesDir().list().length - 1) + ".mp3"));
-        //player.start();
+        player = MediaPlayer.create(this, Uri.parse(getFilesDir() + "/track" + (getFilesDir().list().length - 1) + ".mp3"));
+        player.start();
 
         if (result) {
             tv.setText("CONGRATS!");
@@ -49,8 +45,16 @@ public class ResultScreenActivity extends Activity {
     }
 
     public void onClickReturn(View v) {
-        //player.release();
+        onClickReturn();
+    }
+
+    public void onClickReturn() {
+        player.release();
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        onClickReturn();
+    }
 }

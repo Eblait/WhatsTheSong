@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="voxar.cin.ufpe.br.whatsthesong" >
 
+    <compatible-screens>
+        <!-- all normal size screens -->
+        <screen android:screenSize="normal" android:screenDensity="ldpi" />
+        <screen android:screenSize="normal" android:screenDensity="mdpi" />
+        <screen android:screenSize="normal" android:screenDensity="hdpi" />
+        <screen android:screenSize="normal" android:screenDensity="xhdpi" />
+    </compatible-screens>
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -12,6 +20,7 @@
         android:theme="@android:style/Theme.NoTitleBar" >
         <activity
             android:name=".activities.TitleScreenActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,11 +30,13 @@
 
         <activity
             android:name=".activities.QuizScreenActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_result_screen" >
         </activity>
 
         <activity
             android:name=".activities.ResultScreenActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_result_screen"
             android:theme="@style/Theme.Transparent" >
         </activity>
