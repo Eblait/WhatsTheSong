@@ -4,16 +4,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +33,9 @@ public class QuizScreenActivity extends FragmentActivity {
 
     NetworkThread nt;
     public static int SCORE = 0;
+    public int width;
+    public int height;
+    final int DEVICE_SCREEN_WIDTH = getResources().getDisplayMetrics().widthPixels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class QuizScreenActivity extends FragmentActivity {
 
         Typeface tf = Typefaces.get(getApplicationContext(), "RobotoCondensed-Bold.ttf");
         TextView tv;
+        Button bt;
         try {
             int id;
             for (int i = 1; i <= 2; i++) {
@@ -62,14 +66,27 @@ public class QuizScreenActivity extends FragmentActivity {
             tf = Typefaces.get(getApplicationContext(), "RobotoCondensed-Light.ttf");
 
             for (int i = 1; i <= 4; i++) {
-                id = R.id.class.getField("music" + i).getInt(0);
-                tv = (TextView) findViewById(id);
-                tv.setTypeface(tf);
+                id = R.id.class.getField("button" + i).getInt(0);
+                bt = (Button) findViewById(id);
+                bt.setTypeface(tf);
 
-                id = R.id.class.getField("artist" + i).getInt(0);
-                tv = (TextView) findViewById(id);
-                tv.setTypeface(tf);
+//                id = R.id.class.getField("artist" + i).getInt(0);
+//                bt = (Button) findViewById(id);
+//                bt.setTypeface(tf);
             }
+
+            final ImageView view = (ImageView) findViewById(R.id.loadingBar);
+
+            view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+                    width = view.getWidth();
+                    height = view.getHeight();
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -136,19 +153,19 @@ public class QuizScreenActivity extends FragmentActivity {
         boolean result = false;
 
         switch (id) {
-            case R.id.option1:
+            case R.id.button1:
                 answer = 1;
                 break;
 
-            case R.id.option2:
+            case R.id.button2:
                 answer = 2;
                 break;
 
-            case R.id.option3:
+            case R.id.button3:
                 answer = 3;
                 break;
 
-            case R.id.option4:
+            case R.id.button4:
                 answer = 4;
                 break;
         }
@@ -189,7 +206,7 @@ public class QuizScreenActivity extends FragmentActivity {
             animationSet.addAnimation(r);
 
             TranslateAnimation a = new TranslateAnimation(
-                    Animation.ABSOLUTE,0, Animation.ABSOLUTE, (- (620 - (40 * (6 - size))) + index * 40),
+                    Animation.ABSOLUTE,0, Animation.ABSOLUTE, (- (DEVICE_SCREEN_WIDTH - (40 * (6 - size))) + index * 40),
                     Animation.ABSOLUTE,0, Animation.ABSOLUTE,0);
             a.setDuration(1000);
             animationSet.addAnimation(a);
@@ -228,8 +245,8 @@ public class QuizScreenActivity extends FragmentActivity {
         String instruments[] = {"drum", "bass", "keyboard", "sax", "guitar", "voice"};
 
         //Reset everything to the starting state
-        frame = (FrameLayout) findViewById(R.id.frame);
-        for (int i = 0; i <= 5; i++) {
+        frame = (FrameLayout) findViewById(R.id.instrument_frame);
+        for (int i = 1; i <= 6; i++) {
             frame.getChildAt(i).clearAnimation();
         }
 
@@ -239,16 +256,16 @@ public class QuizScreenActivity extends FragmentActivity {
         }
 
         int id;
-        TextView txtView;
+        Button button;
         try {
             for (int i = 1; i <= 4; i++) {
-                id = R.id.class.getField("music" + i).getInt(0);
-                txtView = (TextView) findViewById(id);
-                txtView.setText("");
+                id = R.id.class.getField("button" + i).getInt(0);
+                button = (Button) findViewById(id);
+                button.setText("");
 
-                id = R.id.class.getField("artist" + i).getInt(0);
-                txtView = (TextView) findViewById(id);
-                txtView.setText("");
+//                id = R.id.class.getField("artist" + i).getInt(0);
+//                txtView = (TextView) findViewById(id);
+//                txtView.setText("");
             }
         } catch (Exception e) {
             e.printStackTrace();

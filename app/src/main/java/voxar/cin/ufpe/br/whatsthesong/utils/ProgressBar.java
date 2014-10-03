@@ -1,24 +1,19 @@
 package voxar.cin.ufpe.br.whatsthesong.utils;
 
-import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.media.MediaPlayer;
-import android.util.Log;
-import android.widget.ImageView;
 
-import voxar.cin.ufpe.br.whatsthesong.R;
 import voxar.cin.ufpe.br.whatsthesong.activities.QuizScreenActivity;
 
 /**
  * Created by Dicksson on 8/22/2014.
  */
-
 public class ProgressBar extends Thread {
 
     MediaPlayer mp;
     String instrument[] = {"", "drum", "bass", "keyboard", "sax", "guitar", "voice"};
     QuizScreenActivity mActivity;
     public boolean running = true;
-    static int pos;
+    int pos, width, height;
     int size, index, instrumentIndex;
 
     public ProgressBar(QuizScreenActivity mActivity, MediaPlayer mp, int index, int instrumentIndex, int size) throws Exception {
@@ -31,22 +26,22 @@ public class ProgressBar extends Thread {
 
     @Override
     public void run() {
-        pos = ((mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().width)/size) * index;
+        pos = ((mActivity.width)/size) * index;
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mActivity.updateLoadingBar(instrument[instrumentIndex - 1], pos, mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().height);
+                mActivity.updateLoadingBar(instrument[instrumentIndex - 1], pos, mActivity.height);
             }
         });
 
         while (running && mp != null) {
             try {
-                pos += (1000 * mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().width)/(size * mp.getDuration());
+                pos += (1000 * mActivity.width)/(size * mp.getDuration());
                 final int finalCurrentPosition = pos;
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mActivity.updateLoadingBar(instrument[instrumentIndex], finalCurrentPosition, mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().height);
+                        mActivity.updateLoadingBar(instrument[instrumentIndex], finalCurrentPosition, mActivity.height);
                     }
                 });
 
@@ -57,11 +52,11 @@ public class ProgressBar extends Thread {
         }
 
         if (instrumentIndex == 6) {
-            pos = ((mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().width) / size) * (index + 1);
+            pos = ((mActivity.width) / size) * (index + 1);
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mActivity.updateLoadingBar(instrument[instrumentIndex], pos, mActivity.findViewById(R.id.loadingBarFrame).getLayoutParams().height);
+                    mActivity.updateLoadingBar(instrument[instrumentIndex], pos, mActivity.height);
                 }
             });
         }

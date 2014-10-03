@@ -6,13 +6,9 @@ import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.RotateAnimation;
-import android.view.animation.TranslateAnimation;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
@@ -122,16 +118,20 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
 
         try {
             ArrayList<String[]> options = finalSong.getOptions();
-
+            String option[];
             for (int i = 1; i <= 4; i++) {
+                option = options.get(i - 1);
 
-                id = R.id.class.getField("music" + i).getInt(0);
-                txtView = (TextView) mActivity.findViewById(id);
-                txtView.setText(options.get(i - 1)[0]);
+                SpannableString span = new SpannableString(option[0]);
+                span.setSpan(new RelativeSizeSpan(5f), 0, option[0].length(), 0);
 
-                id = R.id.class.getField("artist" + i).getInt(0);
+                id = R.id.class.getField("button" + i).getInt(0);
                 txtView = (TextView) mActivity.findViewById(id);
-                txtView.setText(options.get(i - 1)[1]);
+                txtView.setText(span + "\n" + option[1]);
+
+//                id = R.id.class.getField("artist" + i).getInt(0);
+//                txtView = (TextView) mActivity.findViewById(id);
+//                txtView.setText(options.get(i - 1)[1]);
             }
 
             options.clear();

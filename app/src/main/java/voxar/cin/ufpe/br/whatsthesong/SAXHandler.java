@@ -1,7 +1,5 @@
 package voxar.cin.ufpe.br.whatsthesong;
 
-import android.util.Log;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
