@@ -35,12 +35,14 @@ public class QuizScreenActivity extends FragmentActivity {
     public static int SCORE = 0;
     public int width;
     public int height;
-    final int DEVICE_SCREEN_WIDTH = getResources().getDisplayMetrics().widthPixels;
+    int DEVICE_SCREEN_WIDTH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_screen);
+
+        DEVICE_SCREEN_WIDTH = getResources().getDisplayMetrics().widthPixels;
 
         findViewById(R.id.horizontalScrollView).setOnTouchListener(new OnSwipeTouchListener(this) {
             @Override
