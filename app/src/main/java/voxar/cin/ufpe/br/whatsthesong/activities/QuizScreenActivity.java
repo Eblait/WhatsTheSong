@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
@@ -129,7 +130,7 @@ public class QuizScreenActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
         // 1. Instantiate an AlertDialog.Builder with its constructor
-        AlertDialog.Builder builder = new AlertDialog.Builder(QuizScreenActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(QuizScreenActivity.this, android.R.style.Theme_Holo_Dialog));
 
         // 2. Chain together various setter methods to set the dialog characteristics
         builder.setMessage(R.string.dialog_message)

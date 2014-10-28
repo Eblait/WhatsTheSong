@@ -45,5 +45,4 @@ public abstract class OnSwipeTouchListener implements View.OnTouchListener {
             return false;
         }
     }
-
 }

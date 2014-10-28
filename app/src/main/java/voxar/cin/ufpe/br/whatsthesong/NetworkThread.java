@@ -1,11 +1,9 @@
 package voxar.cin.ufpe.br.whatsthesong;
 
+import android.app.ProgressDialog;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
@@ -27,7 +25,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import voxar.cin.ufpe.br.whatsthesong.activities.QuizScreenActivity;
-import voxar.cin.ufpe.br.whatsthesong.fragments.LoadingFragment;
 import voxar.cin.ufpe.br.whatsthesong.utils.ProgressBar;
 
 /**
@@ -41,6 +38,7 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
     public MediaPlayer player;
     public Song aSong;
     public ProgressBar thread;
+    ProgressDialog nDialog;
 
     public NetworkThread(QuizScreenActivity activity) {
         mActivity = activity;
@@ -51,13 +49,9 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
     protected void onPreExecute() {
         super.onPreExecute();
 
-        FragmentManager fm = mActivity.getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        DialogFragment dialogFragment = LoadingFragment.newInstance();
-        dialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        dialogFragment.setCancelable(false);
-        ft.add(dialogFragment, LoadingFragment.TAG);
-        ft.commitAllowingStateLoss();
+        nDialog = new ProgressDialog(mActivity, R.style.Spinner);
+        nDialog.setCancelable(false);
+        nDialog.show();
 
     }
 
@@ -103,11 +97,7 @@ public class NetworkThread extends AsyncTask<File, Integer, Song> {
         super.onPostExecute(aSong);
 
         if ((mActivity != null) && (!mActivity.isFinishing())) {
-            FragmentManager fm = mActivity.getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            LoadingFragment dialog = (LoadingFragment) fm.findFragmentByTag(LoadingFragment.TAG);
-            ft.remove(dialog);
-            ft.commitAllowingStateLoss();
+            nDialog.dismiss();
         }
 
         final Song finalSong = aSong;

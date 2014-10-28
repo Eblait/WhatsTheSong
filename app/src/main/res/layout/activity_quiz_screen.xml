@@ -33,7 +33,7 @@
         android:textSize="28sp"
         android:textColor="#F24E18"
         android:id="@+id/score2"
-        android:layout_marginTop="20dip"
+        android:layout_marginTop="15dip"
         android:layout_marginRight="15dip"
         android:layout_marginEnd="15dip"
         android:layout_alignParentRight="true"
@@ -129,7 +129,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:id="@+id/loadingBar"
             android:src="@drawable/loading_bar" />
@@ -181,10 +181,10 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:layout_margin="20dp"
-        android:layout_marginTop="10dp"
+
         android:layout_below="@+id/loadingBarFrame">
 
         <Button
